@@ -2,6 +2,9 @@ import gradio as gr
 from TTS.api import TTS
 import tempfile
 import os
+import soundfile as sf
+import numpy as np
+
 
 model_name = "tts_models/en/vctk/vits"
 promisingM = ["p282", "p301", "p234", "p232", "p256", "p267", "p272"]
@@ -24,9 +27,10 @@ def text_to_speech(sentence, speaker_name):
     wav = tts.tts_to_file(
         text=sentence, speaker=speaker_name, file_path=file, verbose=False
     )
-    with open(wav, "rb") as audio_file:
-        audio_data = audio_file.read()
-    return wav
+    audio, sample_rate = sf.read(wav, dtype="float32")
+    audio_bytes = (audio * 32767).astype(np.int16)
+    os.remove(wav)
+    return sample_rate, audio_bytes
 
 
 iface = gr.Interface(
