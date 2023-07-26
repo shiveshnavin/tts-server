@@ -1,15 +1,33 @@
 import gradio as gr
 from TTS.api import TTS
+import tempfile
+import os
 
-model_name = 'tts_models/en/vctk/vits'
-promisingM = ['p282', 'p301', 'p234', 'p232', 'p256', 'p267', 'p272']
-promisingF = ['p311', 'p361', 'p263', 'p306', 'p259']
+model_name = "tts_models/en/vctk/vits"
+promisingM = ["p282", "p301", "p234", "p232", "p256", "p267", "p272"]
+promisingF = ["p311", "p361", "p263", "p306", "p259"]
 speakers = promisingM + promisingF
 tts = TTS(model_name)
 
+
 def text_to_speech(sentence, speaker_name):
-    wav = tts.tts(text=sentence, speaker=speaker_name, file_path=None, verbose=False)
+    file = tempfile.NamedTemporaryFile(
+        mode="w+b",
+        buffering=-1,
+        encoding=None,
+        newline=None,
+        suffix=None,
+        prefix=None,
+        dir=None,
+        delete=False,
+    ).name
+    wav = tts.tts_to_file(
+        text=sentence, speaker=speaker_name, file_path=file, verbose=False
+    )
+    with open(wav, "rb") as audio_file:
+        audio_data = audio_file.read()
     return wav
+
 
 iface = gr.Interface(
     fn=text_to_speech,
@@ -20,8 +38,8 @@ iface = gr.Interface(
     examples=[
         ["Hello, this is a sample sentence.", "p282"],
         ["How are you doing?", "p301"],
-    ]
+    ],
 )
 
 if __name__ == "__main__":
-    iface.launch()
+    iface.launch(enable_queue=True)
