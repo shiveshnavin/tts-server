@@ -43,7 +43,8 @@ iface = gr.Interface(
         ["Hello, this is a sample sentence.", "p282"],
         ["How are you doing?", "p301"],
     ],
+    live=True,
 )
 
 if __name__ == "__main__":
-    iface.launch(enable_queue=True)
+    iface.queue().launch(server_name="0.0.0.0")
