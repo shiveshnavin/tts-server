@@ -43,7 +43,6 @@ iface = gr.Interface(
         ["Hello, this is a sample sentence.", "p282"],
         ["How are you doing?", "p301"],
     ],
-    live=True,
 )
 
 if __name__ == "__main__":
