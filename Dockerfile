@@ -1,13 +1,8 @@
-# Use the base image with Python 3.8.3 on Ubuntu 20.04
-FROM brunneis/python:3.8.3-ubuntu-20.04
-
+FROM python/3.11.5-bookworm
 
 WORKDIR /app
 
-
 COPY . .
-COPY . .
-
 
 RUN apt-get update && \
     xargs -a packages.txt apt-get install -y && \
